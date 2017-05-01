@@ -5,48 +5,53 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
+using Xamarin.Forms;
+using System.Diagnostics;
 
 namespace MonkeyHubApp.ViewModels
 {
     public class MainViewModel: BaseViewModel
     {
-        private string _descricao;
+        private string _SearchTerm;
 
-        public string Descricao
+        public string SearchTerm
         {
-            get { return _descricao; }
+            get { return _SearchTerm; }
             set {
-                _descricao = value;
-                SetProperty(ref _descricao, value);
+                if(SetProperty(ref _SearchTerm, value))
+                {
+                    SearchCommand.ChangeCanExecute();
+                }
             }
         }
-
-        private int _idade;
-
-        public int Idade
-        {
-            get { return _idade; }
-            set { _idade = value; SetProperty(ref _idade, value); }
-        }
-
+        
+        public Command SearchCommand { get; } 
 
         public MainViewModel()
         {
-            Descricao = "Olá, mundo, eu estou aqui";
-
-            Task.Delay(1000).ContinueWith( t =>
-            {
-                Descricao = "O texto alterou.";
-
-                for (int i = 0; i <= 10; i++)
-                {
-                    Task.Delay(1000);
-                    Descricao = $"Meu texto mudou {i}";
-                }
-                
-            });
+            SearchCommand = new Command(ExecuteSearchCommand, CanExecuteSearchCommand);
         }
 
-        
+        async void ExecuteSearchCommand()
+        {
+            await Task.Delay(2000);
+
+            bool resposta = await App.Current.MainPage.DisplayAlert("MonkeyHubApp", $"Vc pesquisou por tal coisa?{SearchTerm}", "Sim", "OK");
+
+            if (resposta)
+            {
+                await App.Current.MainPage.DisplayAlert("MonkeyHubApp", "Obrigado", "OK");
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("MonkeyHubApp", "De nada", "OK");
+            }
+        }
+
+        bool CanExecuteSearchCommand()
+        {
+            return string.IsNullOrWhiteSpace(SearchTerm) == false;
+        }
     }
 }

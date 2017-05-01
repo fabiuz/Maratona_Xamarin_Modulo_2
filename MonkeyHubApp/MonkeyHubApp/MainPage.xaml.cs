@@ -13,7 +13,6 @@ namespace MonkeyHubApp
         public MainPage()
         {
             InitializeComponent();
-
             BindingContext = new MainViewModel();
         }
     }

@@ -4,8 +4,9 @@
              xmlns:local="clr-namespace:MonkeyHubApp"
              x:Class="MonkeyHubApp.MainPage">
 
-	<Entry Text="{Binding Mode=TwoWay, Path=Descricao}" 
-           VerticalOptions="Center" 
-           HorizontalOptions="Center" />
+    <StackLayout>
+        <Entry Text="{Binding SearchTerm}"></Entry>
+        <Button Text="Pesquisar" Command="{Binding SearchCommand}" />
+    </StackLayout>
 
 </ContentPage>
